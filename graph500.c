@@ -53,6 +53,19 @@ static void output_results (const int64_t SCALE, int64_t nvtx_scale,
 			    const int NBFS,
 			    const double *bfs_time, const int64_t *bfs_nedge);
 
+#define NO_INLINE __attribute__((noinline))
+#define PREFIX "[sim ticker] "
+
+NO_INLINE void
+sim_roi_start() {
+    printf(PREFIX "roi start\n");
+}
+
+NO_INLINE void
+sim_roi_end() {
+    printf(PREFIX "roi end\n");
+}
+
 int
 main (int argc, char **argv)
 {
@@ -104,7 +117,9 @@ main (int argc, char **argv)
     close (fd);
   }
 
+  sim_roi_start();
   run_bfs ();
+  sim_roi_end();
 
   xfree_large (IJ);
 
@@ -164,7 +179,7 @@ run_bfs (void)
         if (i == m) bfs_root[m++] = challenge; // if not duplicate, add to list
       }
     }
-	  
+
     if (t >= nvtx_connected && m < NBFS) {
       if (m > 0) {
 	fprintf (stderr, "Cannot find %d sample roots of non-self degree > 0, using %d.\n",
